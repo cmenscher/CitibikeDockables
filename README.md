@@ -11,6 +11,13 @@ There have been many times when I've arrived at a station and it's either full o
 - Lodash ("npm install lodash")
 - Kevin Coughlin's Citibike NodeJS package ([https://github.com/KevinTCoughlin/citibike/](https://github.com/KevinTCoughlin/citibike/) or "npm install citibike")
 
+##Querystring Parameters:
+- lat: current latitude (required)
+- lon: current longitude (required)
+- thresholdMeters: the geographic radius for which you want results (optional, defaults to 402.336m or about .25 miles)  
+- dockable: boolean to indicate that you want to search for stations who have parking, as opposed to stations with available bikes...the resulting JSON will contain "availableDocks" or "availableBikes" properties, respectively. (default is true)
+- compact: boolean to indicate you want a stripped-down version of the data for low power/low memory/slow network devices. (optional, default is false)
+
 ##To Dos:
 - Add the ability to return docks with available bikes (not just available docks)
 - Add a "compact" mode to return very simple data for low power/low memory/slow network devices (like the Pebble)
@@ -19,7 +26,7 @@ There have been many times when I've arrived at a station and it's either full o
 
 http://myfuncitibikedomain.com/dockables?lat=40.729425&lon=-73.993707&thresholdMeters=402.336
 
-##Sample response:
+##Sample full response:
 
 ```javascript
 {
@@ -110,6 +117,56 @@ http://myfuncitibikedomain.com/dockables?lat=40.729425&lon=-73.993707&thresholdM
       "stationAddress": "",
       "availableBikes": 7,
       "availableDocks": 23
+    }
+  ]
+}
+```
+
+##Sample compact response (for dockable == true):
+```javascript
+{
+  "stations": [
+    {
+      "id": 167,
+      "latitude": 40.7489006,
+      "longitude": -73.97604882,
+      "label": "E 39 St & 3 Ave",
+      "availableDocks": 13
+    },
+    {
+      "id": 318,
+      "latitude": 40.75320159,
+      "longitude": -73.9779874,
+      "label": "E 43 St & Vanderbilt Ave",
+      "availableDocks": 25
+    },
+    {
+      "id": 359,
+      "latitude": 40.75510267,
+      "longitude": -73.97498696,
+      "label": "E 47 St & Park Av",
+      "availableDocks": 15
+    },
+    {
+      "id": 440,
+      "latitude": 40.75255434,
+      "longitude": -73.97282625,
+      "label": "E 45 St & 3 Ave",
+      "availableDocks": 7
+    },
+    {
+      "id": 517,
+      "latitude": 40.75149263,
+      "longitude": -73.97798848,
+      "label": "Pershing Square S",
+      "availableDocks": 59
+    },
+    {
+      "id": 519,
+      "latitude": 40.75188406,
+      "longitude": -73.97770164,
+      "label": "Pershing Square N",
+      "availableDocks": 58
     }
   ]
 }

@@ -33,19 +33,35 @@ app.get('/', function(request, response) {
 		}
 	}
 
-	var distanceThreshold
-	if(typeof qs.thresholdMeters == "undefined") {
-		//var distanceThreshold = 804.672 //half a mile in meters
-		distanceThreshold = 402.336  //quarter mile in meters			
-	} else {
+	// By default we'll look for docks with available parking
+	var dockable = true;
+	if(typeof qs.dockable !== "undefined") {
+		try {
+			var dockable = JSON.parse(qs.dockable);
+		} catch(err) {
+			console.log("A non-boolean/unusable value for dockable was passed in the querystring. Ignoring...")
+		}
+	}
+
+	// This option will return a very compact result for low power/low memory/slow network devices (like the Pebble)
+	var compact = false;
+	if(typeof qs.compact !== "undefined") {
+		try {
+			var compact = JSON.parse(qs.compact);
+		} catch(err) {
+			console.log("A non-boolean/unusable value for compact was passed in the querystring. Ignoring...")
+		}
+	}
+
+	// This defines the radius by which to filter the results
+	var distanceThreshold = 402.336
+	if(typeof qs.thresholdMeters !== "undefined") {
 		distanceThreshold = parseFloat(qs.thresholdMeters);
 	}
 
-	console.log("\n\nDistance threshold = " + distanceThreshold);
-
 	// initialize the station data (we'll update the bike/dock info periodically)
 	citibike.getStations(null, function(data) {
-		app.locals.stations = data.results;
+		app.locals.stations = data.results; // setting in app.locals to keep persistent but might not be necessary
 
 		var thisStation, dist;
 		var latLon = geo.setLocation(geoLoc);
@@ -54,24 +70,60 @@ app.get('/', function(request, response) {
 			thisStation = app.locals.stations[i];
 			dist = latLon.distVincenty(thisStation.latitude, thisStation.longitude, geoLoc.latitude, geoLoc.longitude);
 
-			// don't even bother listing inactive stations or with no available docks
-			// assuming 2 or fewer means empty because we can't quite trust the data
-			if(thisStation.availableDocks >= 2 && thisStation.status == "Active") {
-				if(dist < distanceThreshold) {
-					console.log(thisStation.label + " (" + thisStation.availableDocks + " docks available)");
-					// remove nearbyStations property...not useful
-					filteredStation = _.omit(thisStation, "nearbyStations");
-					stations.push(filteredStation);
+			var filteredStation = null;
+			if(dockable) {
+				// don't bother listing inactive stations
+				// assuming 2 or fewer docks means empty because we can't quite trust the data
+				if(thisStation.availableDocks >= 2 && thisStation.status == "Active") {
+					if(dist < distanceThreshold) {
+						console.log(thisStation.label + " (" + thisStation.availableDocks + " docks available)");
+						filteredStation = thisStation;
+					}
 				}
+			} else {
+				// don't bother listing inactive stations
+				// assuming 2 or fewer bikes means empty because we can't quite trust the data, the docks are broken, or the bikes were marked for repair
+				if(thisStation.availableBikes >= 3 && thisStation.status == "Active") {
+					if(dist < distanceThreshold) {
+						console.log(thisStation.label + " (" + thisStation.availableDocks + " docks available)");
+						filteredStation = thisStation;
+					}
+				}				
+			}
+
+			if(filteredStation != null) {
+				// remove nearbyStations property...not useful
+				filteredStation = _.omit(filteredStation, "nearbyStations");
+				
+				// we know we're only looking for "Active" stations...
+				filteredStation = _.omit(filteredStation, "status");
+
+				// station address always seems to be empty, so wtf?
+				filteredStation = _.omit(filteredStation, "stationAddress");
+
+				if(compact) {
+					if(dockable) {
+						filteredStation = _.omit(filteredStation, "availableBikes");
+					} else {
+						filteredStation = _.omit(filteredStation, "availableDocks");
+					}
+				}
+
+				stations.push(filteredStation);				
 			}
 		}
-		var outJSON = {
-			requestDate: new Date(),
-			requestGeo: geoLoc,
-			distanceThresholdMeters: distanceThreshold,
-			totalStations: stations.length,
-			stations: stations
+
+		var outJSON = {};
+		if(!compact) {
+			outJSON = {
+					requestDate: new Date(),
+					requestGeo: geoLoc,
+					distanceThresholdMeters: distanceThreshold,
+					totalStations: stations.length,
+			}
 		}
+		outJSON.stations = stations;
+
 		response.json(outJSON);
 	});
 });
