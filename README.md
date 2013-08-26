@@ -7,6 +7,7 @@ This Node app will return a collection of currently "dockable" Citibike stations
 
 - ExpressJS ("npm install express")
 - Lodash ("npm install lodash")
+- Kevin Coughlin's Citibike NodeJS package ([https://github.com/KevinTCoughlin/citibike/](https://github.com/KevinTCoughlin/citibike/) or "npm install citibike")
 
 ##Sample request:
 
