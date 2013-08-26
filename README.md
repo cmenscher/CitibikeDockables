@@ -3,16 +3,16 @@ CitibikeDockables
 
 This Node app will return a collection of "dockable" Citibike stations ("active" status and with >= 2 open docks) within a specified geographic area.  If no geographic threshold is specified, it defaults to 402.336 meters, or about 1/4 mile.
 
-Node requirements:
+##Node requirements:
 
-ExpressJS ("npm install express")
-Lodash ("npm install lodash")
+- ExpressJS ("npm install express")
+- Lodash ("npm install lodash")
 
-Sample request:
+##Sample request:
 
 http://myfuncitibikedomain.com/dockables?lat=40.729425&lon=-73.993707&thresholdMeters=402.336
 
-Sample response:
+##Sample response:
 
 ```javascript
 {
