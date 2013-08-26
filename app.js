@@ -9,8 +9,6 @@ var citibike = new Citibike();
 var geo = require("./geo.js");
 
 app.configure(function() {
-    app.set('views',__dirname+ '/views'); // use /views as template directory
-    app.set( "jsonp callback", true );
     app.use(express.logger());
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
 });

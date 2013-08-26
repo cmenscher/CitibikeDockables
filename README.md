@@ -14,6 +14,7 @@ http://myfuncitibikedomain.com/dockables?lat=40.729425&lon=-73.993707&thresholdM
 
 Sample response:
 
+```javascript
 {
   "requestDate": "2013-08-26T03:28:00.551Z",
   "requestGeo": {
@@ -105,3 +106,4 @@ Sample response:
     }
   ]
 }
+```
