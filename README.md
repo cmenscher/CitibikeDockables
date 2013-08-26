@@ -3,7 +3,7 @@ CitibikeDockables
 
 This Node app will return a collection of currently "dockable" Citibike stations ("active" status and with >= 2 open docks) within a specified geographic area.  If no geographic threshold is specified, it defaults to 402.336 meters, or about 1/4 mile.
 
-There have been many times when I've arrived at a station and it's either full of bikes, or has a single dock available that is broken, or is out of commission all together.  I hope to use this service to create an app to deal with these situations.
+There have been many times when I've arrived at a station and it's either full of bikes, or has a single dock available that is broken, or is out of commission all together.  Additionally, I hate not having an easy way to tell if there are any stations around me with available bikes.  I hope to use this service to create an app to deal with these situations.
 
 ##Node requirements:
 
