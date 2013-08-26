@@ -11,15 +11,17 @@ var geo = require("./geo.js");
 app.configure(function() {
     app.use(express.logger());
     app.use(express.errorHandler({ dumpExceptions: true, showStack: true }));
+    app.set("port", 8000);
 });
 
 app.locals.stations = null;
 app.get('/', function(request, response) {
 	var qs = request.query;
+	var stations = [];
 
 	var geoLoc = {};
 	if(typeof qs.lat === "undefined" || qs.lon === "undefined") {
-		// 109 East 42nd St.
+		// default to midtown/Grand Central
 		geoLoc = {
 			latitude: 40.751832,
 			longitude: -73.976451
@@ -30,8 +32,6 @@ app.get('/', function(request, response) {
 			longitude: parseFloat(qs.lon)
 		}
 	}
-
-	var dockableStations = [];
 
 	var distanceThreshold
 	if(typeof qs.thresholdMeters == "undefined") {
@@ -61,7 +61,7 @@ app.get('/', function(request, response) {
 					console.log(thisStation.label + " (" + thisStation.availableDocks + " docks available)");
 					// remove nearbyStations property...not useful
 					filteredStation = _.omit(thisStation, "nearbyStations");
-					dockableStations.push(filteredStation);
+					stations.push(filteredStation);
 				}
 			}
 		}
@@ -69,8 +69,8 @@ app.get('/', function(request, response) {
 			requestDate: new Date(),
 			requestGeo: geoLoc,
 			distanceThresholdMeters: distanceThreshold,
-			totalStations: dockableStations.length,
-			stations: dockableStations
+			totalStations: stations.length,
+			stations: stations
 		}
 		response.json(outJSON);
 	});
@@ -78,7 +78,7 @@ app.get('/', function(request, response) {
 
 
 // Listen at defined PORT (or port 8080 if is not defined)
-var port = process.env.PORT || 8080;
+var port = app.get("port") || 8080;
 app.listen(port, function() {
   console.log('Listening on port ' + port + "...\n");
 });

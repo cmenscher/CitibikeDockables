@@ -3,11 +3,17 @@ CitibikeDockables
 
 This Node app will return a collection of currently "dockable" Citibike stations ("active" status and with >= 2 open docks) within a specified geographic area.  If no geographic threshold is specified, it defaults to 402.336 meters, or about 1/4 mile.
 
+There have been many times when I've arrived at a station and it's either full of bikes, or has a single dock available that is broken, or is out of commission all together.  I hope to use this service to create an app to deal with these situations.
+
 ##Node requirements:
 
 - ExpressJS ("npm install express")
 - Lodash ("npm install lodash")
 - Kevin Coughlin's Citibike NodeJS package ([https://github.com/KevinTCoughlin/citibike/](https://github.com/KevinTCoughlin/citibike/) or "npm install citibike")
+
+##To Dos:
+- Add the ability to return docks with available bikes (not just available docks)
+- Add a "compact" mode to return very simple data for low power/low memory/slow network devices (like the Pebble)
 
 ##Sample request:
 
