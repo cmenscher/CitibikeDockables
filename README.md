@@ -18,10 +18,6 @@ There have been many times when I've arrived at a station and it's either full o
 - dockable: boolean to indicate that you want to search for stations who have parking, as opposed to stations with available bikes...the resulting JSON will contain "availableDocks" or "availableBikes" properties, respectively. (default is true)
 - compact: boolean to indicate you want a stripped-down version of the data for low power/low memory/slow network devices. (optional, default is false)
 
-##To Dos:
-- Add the ability to return docks with available bikes (not just available docks)
-- Add a "compact" mode to return very simple data for low power/low memory/slow network devices (like the Pebble)
-
 ##Sample request:
 
 http://myfuncitibikedomain.com/dockables?lat=40.729425&lon=-73.993707&thresholdMeters=402.336
