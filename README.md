@@ -1,7 +1,7 @@
 CitibikeDockables
 =================
 
-This Node app will return a collection of "dockable" Citibike stations ("active" status and with >= 2 open docks) within a specified geographic area.  If no geographic threshold is specified, it defaults to 402.336 meters, or about 1/4 mile.
+This Node app will return a collection of currently "dockable" Citibike stations ("active" status and with >= 2 open docks) within a specified geographic area.  If no geographic threshold is specified, it defaults to 402.336 meters, or about 1/4 mile.
 
 ##Node requirements:
 
