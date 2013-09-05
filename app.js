@@ -69,6 +69,7 @@ app.get('/', function(request, response) {
 		for(var i in app.locals.stations) {
 			thisStation = app.locals.stations[i];
 			dist = latLon.distVincenty(thisStation.latitude, thisStation.longitude, geoLoc.latitude, geoLoc.longitude);
+			thisStation.distance = dist;
 
 			var filteredStation = null;
 			if(dockable) {
@@ -113,6 +114,10 @@ app.get('/', function(request, response) {
 			}
 		}
 
+		stations = _.sortBy(stations, function(stn) {
+			return parseFloat(stn.distance);
+		});
+
 		var outJSON = {};
 		if(!compact) {
 			outJSON = {
@@ -124,7 +129,11 @@ app.get('/', function(request, response) {
 		}
 		outJSON.stations = stations;
 
-		response.json(outJSON);
+		if(typeof(qs.callback) === "undefined") {
+			response.json(outJSON);
+		} else {
+			response.jsonp(outJSON);
+		}
 	});
 });
 
